@@ -1,0 +1,296 @@
+        body {
+            background-color: #f5f5f5;
+            transition: .3s;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body.dark {
+            background-color: #111 !important;
+            color: #eee;
+        }
+        .topbar {
+            width: 100%;
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            transition: .3s;
+        }
+
+        /* Hover del botón hamburguesa */
+#btnMenu {
+    transition: .25s ease;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#btnMenu:hover {
+    background: #f0f0f0;      /* claro */
+    color: var(--gold-dark);
+}
+
+body.dark #btnMenu:hover {
+    background: #222;         /* oscuro */
+    color: var(--gold-darkmode-text);
+}
+
+/* Hover del botón de modo oscuro */
+#toggleDark {
+    transition: .25s ease;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+#toggleDark:hover {
+    background: #f0f0f0;
+    color: var(--gold-dark) !important;
+}
+
+body.dark #toggleDark:hover {
+    background: #222;
+    color: var(--gold-darkmode-text) !important;
+}
+
+
+
+        body.dark .topbar {
+            background: #1a1a1a !important;
+            border-color: #333 !important;
+        }
+
+        .logo-aura {
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFDE59, #FF914D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* LUNita */
+        .icon-darkmode {
+            font-size: 28px;
+            cursor: pointer;
+            color: #777 !important;
+            transition: .3s ease;
+        }
+
+        body.dark .icon-darkmode {
+            color: #ddd !important;
+        }
+
+        /*SIDEBAR*/
+        .sidebar {
+            width: 260px;
+            background: white;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            bottom: 0;
+            border-right: 1px solid #ddd;
+            padding-top: 35px;
+            transition: .3s;
+        }
+
+        body.dark .sidebar {
+            background: #1a1a1a;
+            border-right: 1px solid #333;
+        }
+
+        .sidebar a {
+            color: #808080;
+            font-size: 18px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 5px 15px;
+            transition: .3s;
+        }
+
+        .sidebar a:hover {
+            background: #eee;
+        }
+
+        body.dark .sidebar a:hover {
+            background: #222 !important;
+            color: #ddd !important;
+        }
+
+        .sidebar a.active {
+            background: #FFF3D2;
+            font-weight: 600;
+            color: #C9962D;
+        }
+
+        body.dark .sidebar a.active {
+            background: #332b18 !important;
+            color: #e3c27d !important;
+        }
+
+        /* ============================
+           CONTENIDO PRINCIPAL
+        ============================ */
+        .main-content {
+            margin-left: 260px;
+            padding: 110px 40px;
+        }
+
+        .title-section {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .card-device {
+            padding: 20px;
+            border-radius: 18px;
+            background: white;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: .3s;
+        }
+
+        body.dark .card-device {
+            background: #1f1f1f !important;
+            color: #eee !important;
+            border: 1px solid #333 !important;
+            box-shadow: none !important;
+        }
+
+        /* SWITCHES*/
+        .form-check-input {
+            width: 50px;
+            height: 26px;
+            background-color: #cfcfcf;
+            border-color: #cfcfcf;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: #e7ca82 !important;
+            border-color: #e7ca82 !important;
+        }
+
+        body.dark-mode .form-check-input {
+            background-color: #555 !important;
+            border-color: #555 !important;
+        }
+
+        input[type=range] {
+            height: 6px;
+            border-radius: 10px;
+            background: #ddd;
+            outline: none;
+            width: 100%;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            background: #e7ca82;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        body.dark-mode input[type=range] {
+            background: #444 !important;
+        }
+
+        body.dark-mode input[type=range]::-webkit-slider-thumb {
+            background: #e7ca82 !important;
+        }
+
+        /* Track "llenado" dorado — modo claro */
+input[type=range]::-webkit-slider-runnable-track {
+    background: linear-gradient(
+        to right,
+        #e7ca82 var(--value-percent),
+        #ddd var(--value-percent)
+    ) !important;
+}
+input[type=range]::-moz-range-progress {
+    background: #e7ca82 !important;
+}
+input[type=range]::-moz-range-track {
+    background: #ddd !important;
+}
+
+/* Track dorado — modo oscuro */
+body.dark input[type=range]::-webkit-slider-runnable-track {
+    background: linear-gradient(
+        to right,
+        #e3c27d var(--value-percent),
+        #444 var(--value-percent)
+    ) !important;
+}
+body.dark input[type=range]::-moz-range-progress {
+    background: #e3c27d !important;
+}
+body.dark input[type=range]::-moz-range-track {
+    background: #444 !important;
+}
+
+
+        .valor-porcentaje {
+            font-weight: 600;
+            color: #c39540;
+            margin-left: 8px;
+        }
+
+        body.dark-mode .valor-porcentaje {
+            color: #e3c27d !important;
+        }
+
+        .estado-dispositivo {
+            color: #888;
+        }
+
+        body.dark-mode .estado-dispositivo {
+            color: #ccc !important;
+        }
+
+        :root {
+            --gold-light: #FFF3D2;      /* amarillo claro */
+            --gold-dark: #C9962D;       /* dorado */
+            --gold-darkmode-bg: #332b18;
+            --gold-darkmode-text: #e3c27d;
+        }
+
+
+        /* ==========================
+   MENÚ LATERAL — INTERACCIONES
+========================== */
+
+/* Hover: se vuelve dorado */
+.sidebar a:hover {
+    background: var(--gold-light) !important;
+    color: var(--gold-dark) !important;
+}
+
+/* Hover en modo oscuro */
+body.dark .sidebar a:hover {
+    background: var(--gold-darkmode-bg) !important;
+    color: var(--gold-darkmode-text) !important;
+}
+
+        /* Ocultar sidebar en modo contraído */
+        .sidebar.closed {
+            left: -260px;
+        }
+
+/* Cuando el sidebar se cierra, el contenido se recorre */
+        .main-content.closed {
+            margin-left: 0 !important;
+        }
+
+        

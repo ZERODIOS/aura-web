@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA — Gestión de Espacios</title>
+    <link rel="stylesheet" href="aurastyle.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #f5f5f5;
+            font-family: "Poppins", sans-serif;
+            transition: 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: #111;
+            color: #e6e6e6;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            width: 100%;
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            transition: 0.3s ease;
+        }
+
+        /* Hover del botón hamburguesa */
+#btnMenu {
+    transition: .25s ease;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#btnMenu:hover {
+    background: #f0f0f0;      /* claro */
+    color: var(--gold-dark);
+}
+
+body.dark-mode #btnMenu:hover {
+    background: #222;         /* oscuro */
+    color: var(--gold-darkmode-text);
+}
+
+/* Hover del botón de modo oscuro */
+#toggleDark {
+    transition: .25s ease;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+#toggleDark:hover {
+    background: #f0f0f0;
+    color: var(--gold-dark) !important;
+}
+
+body.dark-mode #toggleDark:hover {
+    background: #222;
+    color: var(--gold-darkmode-text) !important;
+}
+
+
+
+        body.dark-mode .topbar {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo-aura {
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFDE59, #FF914D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* LUNA */
+        .icon-darkmode {
+            font-size: 26px;
+            cursor: pointer;
+            color: #777 !important;
+            transition: 0.3s;
+        }
+        body.dark-mode .icon-darkmode {
+            color: #ddd !important;
+        }
+
+        /*  SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: white;
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            border-right: 1px solid #ddd;
+            padding-top: 35px;
+            transition: 0.3s ease;
+        }
+
+        body.dark-mode .sidebar {
+            background: #1a1a1a;
+            border-right: 1px solid #333;
+        }
+
+        .sidebar a {
+            color: #808080;
+            font-size: 18px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 5px 15px;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: #f1f1f1;
+        }
+
+        body.dark-mode .sidebar a:hover {
+            background: #222;
+            color: #ddd;
+        }
+
+        .sidebar a.active {
+            background: #FFF3D2;
+            font-weight: 600;
+            color: #C9962D;
+        }
+
+        body.dark-mode .sidebar a.active {
+            background: #332b18;
+            color: #e3c27d;
+        }
+
+        /*MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            padding: 110px 40px;
+        }
+
+        .card-panel {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 600px;
+            transition: 0.3s;
+        }
+
+        body.dark-mode .card-panel {
+            background: #1a1a1a;
+            box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+        }
+
+        /* FILTROS PARA QUE QUEDE BONISS */
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .filter-box {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 25px;
+            border: 1px solid #dedede;
+            min-width: 160px;
+            transition: 0.3s;
+        }
+
+        body.dark-mode .filter-box {
+            background: #222;
+            border-color: #444;
+            color: #eee;
+        }
+
+        .filter-box select,
+        .filter-box input {
+            font-size: 13px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: inherit;
+        }
+
+        /* --------------------------
+           BOTONES CSV / PDF
+        --------------------------- */
+        body.dark-mode .btn-success {
+            background: #226622;
+            border-color: #226622;
+        }
+
+        body.dark-mode .btn-danger {
+            background: #772222;
+            border-color: #772222;
+        }
+
+        /*TABLA OSCURA*/
+
+        .tabla-dark {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #ddd;
+            overflow-y: auto;
+            max-height: 430px;
+            transition: 0.3s;
+        }
+
+        body.dark-mode .tabla-dark {
+            background: #111;
+            border: 1px solid #333;
+        }
+
+        .tabla-oscura {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla-oscura th {
+            background: #fafafa;
+            padding: 14px;
+            font-weight: bold;
+            border-bottom: 2px solid #ccc;
+            text-align: left;
+        }
+
+        body.dark-mode .tabla-oscura th {
+            background: #222;
+            border-bottom: 2px solid #444;
+            color: #f5f5f5;
+        }
+
+        .tabla-oscura td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        body.dark-mode .tabla-oscura td {
+            border-bottom: 1px solid #333;
+            color: #e6e6e6;
+        }
+
+        .tabla-oscura tbody tr:hover {
+            background: #f1f1f1;
+        }
+
+        body.dark-mode .tabla-oscura tbody tr:hover {
+            background: #292929;
+        }
+
+        /* -----------------------------------------
+   TARJETAS — MODO CLARO / MODO OSCURO
+------------------------------------------ */
+
+.space-card {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+/* MODO OSCURO */
+body.dark-mode .space-card {
+    background: #1a1a1a;
+    box-shadow: 0 2px 10px rgba(255,255,255,0.05);
+    color: #e6e6e6;
+}
+
+/* Textos internos */
+body.dark-mode .space-card p,
+body.dark-mode .space-card h5 {
+    color: #e6e6e6 !important;
+}
+
+/* Etiqueta de estado (Activo) */
+.space-card .status-tag {
+    background: #D9D9D9;
+    color: #333;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.dark-mode .space-card .status-tag {
+    background: #333;
+    color: #eee;
+}
+
+/* Estado ambiental */
+.space-card .estado-verde {
+    color: green;
+    font-weight: 600;
+}
+
+.space-card .estado-naranja {
+    color: #E67E22;
+    font-weight: 600;
+}
+
+.space-card .estado-rojo {
+    color: #C0392B;
+    font-weight: 600;
+}
+
+/* Estados en modo oscuro */
+body.dark-mode .space-card .estado-verde {
+    color: #7DFF7D !important;
+}
+
+body.dark-mode .space-card .estado-naranja {
+    color: #FFB266 !important;
+}
+
+body.dark-mode .space-card .estado-rojo {
+    color: #FF8080 !important;
+}
+
+/* Botón eliminar */
+body.dark-mode .space-card .btn-danger {
+    background: #552222 !important;
+    color: #ffb3b3 !important;
+    border: none !important;
+}
+
+/* ⭐ COLORES DORADOS */
+:root {
+    --gold-light: #FFF3D2;
+    --gold-dark: #C9962D;
+    --gold-darkmode-bg: #332b18;
+    --gold-darkmode-text: #e3c27d;
+}
+
+/* ==========================
+   MENÚ LATERAL — INTERACCIONES
+========================== */
+
+/* Hover: se vuelve dorado */
+.sidebar a:hover {
+    background: var(--gold-light) !important;
+    color: var(--gold-dark) !important;
+}
+
+/* Hover en modo oscuro */
+body.dark-mode .sidebar a:hover {
+    background: var(--gold-darkmode-bg) !important;
+    color: var(--gold-darkmode-text) !important;
+}
+
+/* Activo: queda dorado permanentemente */
+.sidebar a.active {
+    background: var(--gold-light) !important;
+    color: var(--gold-dark) !important;
+    font-weight: 600;
+}
+
+/* Activo en modo oscuro */
+body.dark-mode .sidebar a.active {
+    background: var(--gold-darkmode-bg) !important;
+    color: var(--gold-darkmode-text) !important;
+}
+
+/* Ocultar sidebar en modo contraído */
+        .sidebar.closed {
+            left: -260px;
+        }
+
+/* Cuando el sidebar se cierra, el contenido se recorre */
+        .main-content.closed {
+            margin-left: 0 !important;
+        }
+
+    </style>
+
+
+</head>
+
+        <body>
+
+    <!-- TOPBAR -->
+            <div class="topbar d-flex justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <i id="btnMenu" class="bi bi-list fs-2" style="cursor:pointer;"></i>
+                    <i class="bi bi-house-fill fs-3"></i>
+                    <span class="logo-aura">AURA</span>
+                </div>
+
+                <div class="d-flex align-items-center gap-4">
+            <!-- ICONO DE LUNA -->
+                    <i class="bi bi-moon icon-darkmode" id="toggleDark"></i>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <div id="circuloUsuario" 
+                            style="background:#6C7A89; color:white; border-radius:50%; width:46px; height:46px; display:flex; justify-content:center; align-items:center;">
+                            US
+                        </div>
+
+                        <span id="nombreUsuario">Usuario</span>
+                    </div>
+
+                    <i></i>
+                </div>
+            </div>
+
+    <!-- SIDEBAR -->
+            <div class="sidebar">
+                <a href="dashboard.html"><i class="bi bi-bar-chart-fill" style="color:#C9962D;"></i> Dashboard</a>
+                <a href="control_maual.html"><i class="bi bi-search" style="color:#C9962D;"></i> Control Manual</a>
+                <a class="active" href="gestion_espacios.html"><i class="bi bi-grid-3x3-gap-fill" style="color:#C9962D;"></i> Espacios</a>
+                <a href="historial_reportes.html"><i class="bi bi-clock-history" style="color:#C9962D;"></i> Historial</a>
+            </div>
+
+    <!-- CONTENIDO -->
+     
+            <div class="main-content">
+
+    <!-- TÍTULO + BOTÓN -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 style="font-weight:700;">Gestión de espacios</h2>
+
+                <button id="btnMostrarForm" class="btn btn-warning"> + Agregar espacios</button>
+
+            </div>
+
+            <div id="formEspacio" style="display:none;" class="mt-4">
+
+    <h3>Nuevo Espacio</h3>
+
+    <input type="text" id="nombre" placeholder="Nombre del espacio" class="form-control mb-2">
+    <input type="text" id="planta" placeholder="Planta" class="form-control mb-2">
+    <input type="number" id="capacidad" placeholder="Capacidad" class="form-control mb-2">
+    <input type="number" id="id_usuario" placeholder="ID del usuario encargado" class="form-control mb-3">
+
+    <button id="btnAgregar" class="btn btn-success">Guardar espacio</button>
+
+    <div id="msg" class="mt-3"></div>
+</div>
+
+
+    <!-- TARJETA DEL ESPACIO -->
+     <div class="cards-container d-flex flex-wrap gap-4">
+            <div class="space-card p-4 mb-4" 
+                style="width:420px;">
+
+        <!-- HEADER DE TARJETA -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 style="font-weight:600; margin:0;">Oficina A</h5>
+
+                    <span style="
+                        background:#539453;
+                        padding:5px 12px;
+                        border-radius:12px;
+                        font-size:13px;
+                        font-weight:600;
+                    " class="status-tag">
+                        Activo
+                    </span>
+                </div>
+
+        <!-- SUBINFO -->
+                <p class="m-0" style="font-size:14px; opacity:0.8;">
+                    Planta: 2 | Capacidad: 8 personas
+                </p>
+
+                <div class="mt-3">
+                    <p class="m-1"><strong>Sensores:</strong> <span>5 activos</span></p>
+                    <p class="m-1"><strong>Dispositivos:</strong> <span>4 conectados</span></p>
+                    <p class="m-1">
+                        <strong>Estado Ambiental:</strong> 
+                        <span style="color:green; font-weight:600;" class="estado-verde">Óptimo</span>
+                    </p>
+                </div>
+
+        <!-- BOTONES -->
+                <div class="d-flex gap-3 mt-3">
+                    <button class="btn btn-primary"
+                            style="padding:6px 14px; border-radius:8px;">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </button>
+
+                    <button class="btn btn-danger"
+                            style="padding:6px 14px; border-radius:8px; background:#F8D7DA; border:none; color:#C0392B;">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- TARJETA 2 — AULA 1 -->
+<div class="space-card p-4 mb-4"
+     style="width:420px;">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 style="font-weight:600; margin:0;">Aula 1</h5>
+
+        <span style="
+            background:#539453;
+            padding:5px 12px;
+            border-radius:12px;
+            font-size:13px;
+            font-weight:600;
+        ">
+            Activo
+        </span>
+    </div>
+
+    <!-- SUBINFO -->
+    <p class="m-0" style="font-size:14px; opacity:0.8;">
+        Planta: 1 | Capacidad: 30 personas
+    </p>
+
+    <div class="mt-3">
+        <p class="m-1"><strong>Sensores:</strong> 5 activos</p>
+        <p class="m-1"><strong>Dispositivos:</strong> 6 conectados</p>
+        <p class="m-1">
+            <strong>Estado Ambiental:</strong>
+            <span style="color:#E67E22; font-weight:600;" class="estado-naranja">Regular</span>
+        </p>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="d-flex gap-3 mt-3">
+        <button class="btn btn-primary"
+                style="padding:6px 14px; border-radius:8px;">
+            <i class="bi bi-pencil-square"></i> Editar
+        </button>
+
+        <!-- <button class="btn btn-danger"
+                style="padding:6px 14px; border-radius:8px; background:#F8D7DA; border:none; color:#C0392B;">
+            <i class="bi bi-trash"></i> Eliminar
+        </button> -->
+    </div>
+
+</div>
+
+
+            </div> <!-- FIN DEL CONTAINER -->
+
+        </div>
+
+
+    
+    <!-- SCRIPT MODO OSCURO -->
+    <script>
+(function () {
+    const toggle = document.getElementById("toggleDark");
+    if (!toggle) return; // por si no existe el elemento
+
+    // 1) Al cargar la página: aplica el tema guardado
+    const isDark = localStorage.getItem("modo-oscuro") === "true";
+    if (isDark) {
+        document.body.classList.add("dark-mode");
+        // opcional: cambia el icono si usas iconos (ejemplo con bootstrap icons)
+        if (toggle.classList.contains('bi-moon')) toggle.classList.replace('bi-moon', 'bi-sun');
+    } else {
+        // asegurar icono correcto cuando no está en dark
+        if (toggle.classList.contains('bi-sun')) toggle.classList.replace('bi-sun', 'bi-moon');
+    }
+
+    // 2) Manejador de clic: alterna clase y guarda estado
+    toggle.addEventListener('click', () => {
+        const nowDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('modo-oscuro', nowDark);
+
+        // opcional: cambiar icono entre luna/sol si usas clases bi
+        if (nowDark) {
+            if (toggle.classList.contains('bi-moon')) toggle.classList.replace('bi-moon', 'bi-sun');
+        } else {
+            if (toggle.classList.contains('bi-sun')) toggle.classList.replace('bi-sun', 'bi-moon');
+        }
+    });
+})();
+</script>
+
+
+<script>
+    const btnMenu = document.getElementById("btnMenu");
+    const sidebar = document.querySelector(".sidebar");
+    const mainContent = document.querySelector(".main-content");
+
+    btnMenu.addEventListener("click", () => {
+        sidebar.classList.toggle("closed");
+        mainContent.classList.toggle("closed");
+    });
+</script>
+
+<script>
+async function cargarEspacios() {
+    const contenedor = document.querySelector(".cards-container");
+
+    // Limpiar contenido previo (importante para refrescar)
+    contenedor.innerHTML = "<p style='color:gray;'>Cargando espacios...</p>";
+
+    try {
+        const respuesta = await fetch("http://auraa.ddns.net:8000/getespacios", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (!respuesta.ok) {
+            contenedor.innerHTML = "<p style='color:red;'>Error al obtener espacios.</p>";
+            return;
+        }
+
+        const datos = await respuesta.json();
+
+        // Limpiar ya con datos reales
+        contenedor.innerHTML = "";
+
+        if (datos.length === 0) {
+            contenedor.innerHTML = "<p style='color:gray;'>No hay espacios registrados.</p>";
+            return;
+        }
+
+        datos.forEach(espacio => {
+            const card = document.createElement("div");
+            card.classList.add("space-card", "p-4", "mb-4");
+            card.style.width = "420px";
+
+            card.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 style="font-weight:600; margin:0;">${espacio.nombre}</h5>
+
+                    <span class="status-tag"
+                        style="background:#539453; padding:5px 12px; border-radius:12px; font-size:13px; font-weight:600;">
+                        Activo
+                    </span>
+                </div>
+
+                <p class="m-0" style="font-size:14px; opacity:0.8;">
+                    Planta: ${espacio.planta} | Capacidad: ${espacio.capacidad} personas
+                </p>
+
+                <div class="mt-3">
+                    <p class="m-1"><strong>ID de espacio:</strong> ${espacio.id_espacio}</p>
+                    <p class="m-1"><strong>ID usuario dueño:</strong> ${espacio.id_usuario}</p>
+                </div>
+
+                <div class="d-flex gap-3 mt-3">
+                    <button class="btn btn-primary"
+        style="padding:6px 14px; border-radius:8px;"
+        onclick="editarEspacio(${espacio.id_espacio})">
+    <i class="bi bi-pencil-square"></i> Editar
+</button>
+
+
+                   
+                </div>
+            `;
+
+            contenedor.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error("Error al cargar espacios:", error);
+        contenedor.innerHTML = "<p style='color:red;'>Error de conexión.</p>";
+    }
+}
+
+//   FUNCIÓN PARA ELIMINAR ESPACIOS
+function eliminarEspacio(id_espacio) {
+
+    if (!confirm("¿Seguro que quieres eliminar este espacio?")) return;
+
+    // 1️⃣ Primero obtenemos los DATOS DEL ESPACIO
+    fetch("http://auraa.ddns.net:8000/getespacio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_espacio: id_espacio })
+    })
+    .then(res => res.json())
+    .then(espacio => {
+
+        // 2️⃣ Extraemos cada campo individualmente
+        const id     = espacio.id_espacio;
+        const nombre = espacio.nombre;
+        const planta = espacio.planta;
+        const capacidad = espacio.capacidad;
+        const id_usuario = espacio.id_usuario;
+
+        console.log("ID:", id);
+        console.log("Nombre:", nombre);
+        console.log("Planta:", planta);
+        console.log("Capacidad:", capacidad);
+        console.log("Usuario:", id_usuario);
+
+        // 3️⃣ Enviamos todos los campos UNO POR UNO al backend
+        return fetch("http://auraa.ddns.net:8000/delespacio", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id_espacio: id,
+                nombre: nombre,
+                planta: planta,
+                capacidad: capacidad,
+                id_usuario: id_usuario
+            })
+        });
+
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Respuesta del backend al eliminar:", data);
+        alert(data.mensaje || "Espacio eliminado.");
+        cargarEspacios();
+    })
+    .catch(error => {
+        console.error("Error al eliminar:", error);
+        alert("Error al intentar eliminar el espacio.");
+    });
+
+}
+
+
+
+
+
+
+
+// Llamar la API al cargar la página
+document.addEventListener("DOMContentLoaded", cargarEspacios);
+</script>
+
+<script>
+const nombre = localStorage.getItem("usuarioNombre") || "";
+const apellido = localStorage.getItem("usuarioApellido") || "";
+
+// Elementos
+const spanUsuario = document.getElementById("nombreUsuario");
+const circulo = document.getElementById("circuloUsuario");
+
+// Mostrar nombre completo
+let nombreCompleto = nombre;
+if (apellido) nombreCompleto += " " + apellido;
+spanUsuario.textContent = nombreCompleto || "Usuario";
+
+// Función para obtener dos iniciales siempre
+function obtenerIniciales(nombre, apellido) {
+    let iniciales = "";
+
+    if (nombre && apellido) {
+        // Caso normal: nombre + apellido
+        iniciales = nombre.charAt(0) + apellido.charAt(0);
+    } else if (nombre) {
+        // Solo nombre
+        iniciales = nombre.substring(0, 2);
+    } else if (apellido) {
+        // Solo apellido
+        iniciales = apellido.substring(0, 2);
+    } else {
+        // Ninguno
+        iniciales = "US";
+    }
+
+    return iniciales.toUpperCase();
+}
+
+// Mostrar iniciales en el círculo
+circulo.textContent = obtenerIniciales(nombre, apellido);
+</script>
+
+<script>
+// Mostrar formulario al presionar el botón
+document.getElementById("btnMostrarForm").addEventListener("click", () => {
+    document.getElementById("formEspacio").style.display = "block";
+});
+
+// Guardar nuevo espacio
+document.getElementById("btnAgregar").addEventListener("click", function () {
+
+    const payload = {
+        nombre: document.getElementById("nombre").value,
+        planta: document.getElementById("planta").value,
+        capacidad: document.getElementById("capacidad").value,
+        id_usuario: document.getElementById("id_usuario").value
+    };
+
+    if (editandoId === null) {
+        // AGREGAR
+        fetch("http://auraa.ddns.net:8000/addespacio", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        }).then(() => cargarEspacios());
+
+    } else {
+        // EDITAR
+        payload.id_espacio = editandoId;
+
+        fetch("http://auraa.ddns.net:8000/updateespacio", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        }).then(() => {
+            editandoId = null;
+            document.getElementById("btnAgregar").innerText = "Guardar espacio";
+            cargarEspacios();
+        });
+    }
+});
+
+
+function mostrarFormularioEdicion(espacio) {
+
+    // Llenar los campos del formulario con los datos existentes
+    document.getElementById("edit-id").value = espacio.id_espacio;
+    document.getElementById("edit-nombre").value = espacio.nombre;
+    document.getElementById("edit-planta").value = espacio.planta;
+    document.getElementById("edit-capacidad").value = espacio.capacidad;
+    document.getElementById("edit-id-usuario").value = espacio.id_usuario;
+
+    // Mostrar el formulario
+    document.getElementById("editFormContainer").style.display = "block";
+}
+
+function editarEspacio() {
+    const id = document.getElementById("edit-id").value;
+    const nombre = document.getElementById("edit-nombre").value;
+    const planta = document.getElementById("edit-planta").value;
+    const capacidad = document.getElementById("edit-capacidad").value;
+    const idUsuario = document.getElementById("edit-id-usuario").value;
+
+    const datos = {
+        id_espacio: Number(id),
+        nombre: nombre,
+        planta: planta,
+        capacidad: Number(capacidad),
+        id_usuario: Number(idUsuario)
+    };
+
+    fetch("http://auraa.ddns.net:8000/updateespacio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.status === "ok") {
+            alert("Espacio actualizado correctamente.");
+            document.getElementById("editFormContainer").style.display = "none";
+            cargarEspacios(); // vuelve a cargar la lista
+        } else {
+            alert("Error: " + (data.message || "No se pudo actualizar el espacio"));
+        }
+
+    })
+    .catch(err => {
+        console.error("Error al actualizar:", err);
+        alert("No se pudo conectar con el servidor.");
+    });
+}
+
+</script>
+
+<script>
+    function editarEspacio(id) {
+    fetch("http://auraa.ddns.net:8000/getespacioid?id=" + id)
+    .then(res => res.json())
+    .then(espacio => {
+        // Mostrar formulario
+        document.getElementById("formEspacio").style.display = "block";
+
+        // Rellenar inputs
+        document.getElementById("nombre").value = espacio.nombre;
+        document.getElementById("planta").value = espacio.planta;
+        document.getElementById("capacidad").value = espacio.capacidad;
+        document.getElementById("id_usuario").value = espacio.id_usuario;
+
+        // Guardar ID en una variable global
+        window.idEditando = id;
+
+        // Cambiar texto del botón
+        document.getElementById("btnAgregar").innerText = "Guardar cambios";
+    });
+}
+
+document.getElementById("btnAgregar").addEventListener("click", function() {
+    const datos = {
+        nombre: nombre.value,
+        planta: planta.value,
+        capacidad: capacidad.value,
+        id_usuario: id_usuario.value
+    };
+
+    if (window.idEditando) {
+        // EDITAR
+        datos.id_espacio = window.idEditando;
+        fetch("http://auraa.ddns.net:8000/updateespacio", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        })
+        .then(r => r.json())
+        .then(() => {
+            alert("Espacio actualizado");
+            window.idEditando = null;
+            location.reload();
+        });
+
+    } else {
+        // AGREGAR
+        fetch("http://auraa.ddns.net:8000/insertespacio", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        })
+        .then(r => r.json())
+        .then(() => {
+            alert("Espacio agregado");
+            location.reload();
+        });
+    }
+});
+
+let editandoId = null;
+
+function editarEspacio(id) {
+    fetch("http://auraa.ddns.net:8000/getespacio", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ id_espacio: id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        editandoId = id;
+
+        // Mostrar formulario
+        document.getElementById("formEspacio").style.display = "block";
+
+        // Colocar datos en inputs
+        document.getElementById("nombre").value = data.nombre;
+        document.getElementById("planta").value = data.planta;
+        document.getElementById("capacidad").value = data.capacidad;
+        document.getElementById("id_usuario").value = data.id_usuario;
+
+        // Cambiar texto del botón
+        document.getElementById("btnAgregar").innerText = "Actualizar espacio";
+    });
+}
+
+</script>
+
+</body>
+</html>

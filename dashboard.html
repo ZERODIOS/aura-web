@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Sensores</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="aurastyle.css">
+    <!-- Iconos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #f3f3f3; 
+      padding: 20px; 
+      margin: 0;
+    }
+    h1 { 
+      text-align: center; 
+      margin-bottom: 30px; 
+      color: #333;
+    }
+
+    /* Tarjetas de estadísticas superiores */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .stat-card .icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .stat-card .range {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .stat-card .status {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4caf50;
+    }
+
+    /* Gráficas */
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
+      gap: 30px; 
+    }
+    .card { 
+      background: #fff; 
+      padding: 20px; 
+      border-radius: 15px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    }
+
+
+
+
+
+    body {
+            background-color: #f5f5f5;
+            transition: .3s;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body.dark-mode {
+            background-color: #111 !important;
+            color: #eee;
+        }
+        .topbar {
+            width: 100%;
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            transition: .3s;
+        }
+
+        /* Hover del botón hamburguesa */
+#btnMenu {
+    transition: .25s ease;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#btnMenu:hover {
+    background: #f0f0f0;      /* claro */
+    color: var(--gold-dark);
+}
+
+body.dark-mode #btnMenu:hover {
+    background: #222;         /* oscuro */
+    color: var(--gold-darkmode-text);
+}
+
+/* Hover del botón de modo oscuro */
+#toggleDark {
+    transition: .25s ease;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+#toggleDark:hover {
+    background: #f0f0f0;
+    color: var(--gold-dark) !important;
+}
+
+body.dark-mode #toggleDark:hover {
+    background: #222;
+    color: var(--gold-darkmode-text) !important;
+}
+
+
+
+        body.dark-mode .topbar {
+            background: #1a1a1a !important;
+            border-color: #333 !important;
+        }
+
+        .logo-aura {
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FFDE59, #FF914D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* LUNita */
+        .icon-darkmode {
+            font-size: 28px;
+            cursor: pointer;
+            color: #777 !important;
+            transition: .3s ease;
+        }
+
+        body.dark-mode .icon-darkmode {
+            color: #ddd !important;
+        }
+
+        /*SIDEBAR*/
+        .sidebar {
+            width: 260px;
+            background: white;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            bottom: 0;
+            border-right: 1px solid #ddd;
+            padding-top: 35px;
+            transition: .3s;
+        }
+
+        body.dark-mode .sidebar {
+            background: #1a1a1a;
+            border-right: 1px solid #333;
+        }
+
+        .sidebar a {
+            color: #808080;
+            font-size: 18px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 5px 15px;
+            transition: .3s;
+        }
+
+        .sidebar a:hover {
+            background: #eee;
+        }
+
+        body.dark-mode .sidebar a:hover {
+            background: #222 !important;
+            color: #ddd !important;
+        }
+
+        .sidebar a.active {
+            background: #FFF3D2;
+            font-weight: 600;
+            color: #C9962D;
+        }
+
+        body.dark-mode .sidebar a.active {
+            background: #332b18 !important;
+            color: #e3c27d !important;
+        }
+
+     /* ==========================
+   MENÚ LATERAL — INTERACCIONES
+========================== */
+
+/* Hover: se vuelve dorado */
+.sidebar a:hover {
+    background: var(--gold-light) !important;
+    color: var(--gold-dark) !important;
+}
+
+/* Hover en modo oscuro */
+body.dark-mode .sidebar a:hover {
+    background: var(--gold-darkmode-bg) !important;
+    color: var(--gold-darkmode-text) !important;
+}
+
+        /* Ocultar sidebar en modo contraído */
+        .sidebar.closed {
+            left: -260px;
+        }
+
+/* Cuando el sidebar se cierra, el contenido se recorre */
+        .main-content.closed {
+            margin-left: 0 !important;
+        }
+
+
+        /* MAIN CONTENT - MODO OSCURO */
+body.dark-mode .main-content {
+    background: #111 !important;
+    color: #eee !important;
+}
+
+/* Tarjetas en modo oscuro */
+body.dark-mode .stat-card,
+body.dark-mode .card {
+    background: #1a1a1a !important;
+    color: #eee !important;
+    box-shadow: 0 2px 8px rgba(255,255,255,0.05) !important;
+}
+
+/* Texto dentro de las tarjetas */
+body.dark-mode .stat-card .label,
+body.dark-mode .stat-card .range,
+body.dark-mode .stat-card .value {
+    color: #ddd !important;
+}
+
+/* Gráficas en modo oscuro (titulo, labels) */
+body.dark-mode .card canvas {
+    filter: brightness(0.85);
+}
+
+  </style>
+</head>
+
+<body>
+<!-- TOPBAR -->
+    <div class="topbar d-flex justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <i id="btnMenu" class="bi bi-list fs-2" style="cursor:pointer;"></i>
+            <i class="bi bi-house-fill fs-3"></i>
+            <span class="logo-aura">AURA</span>
+        </div>
+
+        <div class="d-flex align-items-center gap-4">
+
+            <!-- LUNA -->
+            <i id="toggleDark" class="bi bi-moon icon-darkmode"></i>
+
+            <div class="d-flex align-items-center gap-2">
+                <div id="circuloUsuario" 
+                    style="background:#6C7A89; color:white; border-radius:50%; width:46px; height:46px; display:flex; justify-content:center; align-items:center;">
+                    US
+                </div>
+
+                <span id="nombreUsuario">Usuario</span>
+            </div>
+
+            <i></i>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a class="active" href="dashboard.html"><i class="bi bi-bar-chart-fill" style="color:#C9962D;"></i> Dashboard</a>
+        <a href="control_maual.html"><i class="bi bi-search" style="color:#C9962D;"></i> Control Manual</a>
+        <a href="gestion_espacios.html"><i class="bi bi-grid-3x3-gap-fill" style="color:#C9962D;"></i> Espacios</a>
+        <a href="historial_reportes.html"><i class="bi bi-clock-history" style="color:#C9962D;"></i> Historial</a>
+    </div>
+    
+    <!-- CONTENIDO -->
+    <div class="main-content">
+        
+<h2 class="title-section mb-4">DASHBOARD</h2>
+
+
+<!-- Tarjetas de estadísticas -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="status"></div>
+    <div class="icon">🌡️</div>
+    <div class="label">Temperatura</div>
+    <div class="value" id="tempValue">--°C</div>
+    <div class="range">Rango: 18-26°C</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="status"></div>
+    <div class="icon">☁️</div>
+    <div class="label">CO₂</div>
+    <div class="value" id="co2Value">-- ppm</div>
+    <div class="range">Límite: 1000 ppm</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="status"></div>
+    <div class="icon">🔊</div>
+    <div class="label">Ruido</div>
+    <div class="value" id="noiseValue">-- dB</div>
+    <div class="range">Límite: 70 dB</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="status"></div>
+    <div class="icon">💡</div>
+    <div class="label">Iluminación</div>
+    <div class="value" id="lightValue">-- lux</div>
+    <div class="range">Rango: 300-500 lux</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="status"></div>
+    <div class="icon">💧</div>
+    <div class="label">Humedad</div>
+    <div class="value" id="humValue">--%</div>
+    <div class="range">Rango: 40-60%</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="status"></div>
+    <div class="icon">🌫️</div>
+    <div class="label">PM2.5</div>
+    <div class="value" id="pmValue">-- µg/m³</div>
+    <div class="range">Límite: 25 µg/m³</div>
+  </div>
+</div>
+
+<!-- Gráficas -->
+<div class="grid">
+  <div class="card"><canvas id="tempChart"></canvas></div>
+  <div class="card"><canvas id="humChart"></canvas></div>
+  <div class="card"><canvas id="co2Chart"></canvas></div>
+  <div class="card"><canvas id="pmChart"></canvas></div>
+  <div class="card"><canvas id="noiseChart"></canvas></div>
+  <div class="card"><canvas id="lightChart"></canvas></div>
+</div>
+
+</div>
+
+<script>
+let tempChart, humChart, co2Chart, pmChart, noiseChart, lightChart;
+
+async function cargarDatos() {
+  try {
+    const res = await fetch("http://auraa.ddns.net:8000/getmediciones");
+    const datos = await res.json();
+
+    if (!Array.isArray(datos) || datos.length === 0) return;
+
+    const labels = datos.map(d => d.fecha_hora.split("T")[1]);
+
+    const temp = datos.map(d => d.temperatura);
+    const hum = datos.map(d => d.humedad);
+    const co2 = datos.map(d => d.co2);
+    const luz = datos.map(d => d.iluminacion);
+
+    const pm_estaticos = [8, 10, 12, 14, 16, 18];
+    
+    // Obtener ruido del último dato (si existe en la API)
+    const ruido = datos.length > 0 && datos[datos.length - 1].ruido ? datos[datos.length - 1].ruido : 55;
+
+    // Actualizar valores en las tarjetas (último dato)
+    if (datos.length > 0) {
+      const ultimo = datos[datos.length - 1];
+      document.getElementById('tempValue').textContent = `${ultimo.temperatura}°C`;
+      document.getElementById('co2Value').textContent = `${ultimo.co2} ppm`;
+      document.getElementById('noiseValue').textContent = `${ruido} dB`;
+      document.getElementById('lightValue').textContent = `${ultimo.iluminacion} lux`;
+      document.getElementById('humValue').textContent = `${ultimo.humedad}%`;
+      document.getElementById('pmValue').textContent = `${pm_estaticos[pm_estaticos.length - 1]} µg/m³`;
+    }
+
+    actualizarGraficas(labels, temp, hum, co2, pm_estaticos, ruido, luz);
+
+  } catch (error) {
+    console.error("Error al cargar datos:", error);
+  }
+}
+
+function crearGraficas(labels, temp, hum, co2, pm, noise, light) {
+
+  tempChart = new Chart(document.getElementById("tempChart"), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ 
+        label: 'Temperatura (°C)', 
+        data: temp, 
+        borderColor: 'rgb(239, 68, 68)',
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'Temperatura' }
+      }
+    }
+  });
+
+  humChart = new Chart(document.getElementById("humChart"), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ 
+        label: 'Humedad (%)', 
+        data: hum, 
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'Humedad' }
+      }
+    }
+  });
+
+  co2Chart = new Chart(document.getElementById("co2Chart"), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ 
+        label: 'CO2 (ppm)', 
+        data: co2, 
+        backgroundColor: 'rgba(34, 197, 94, 0.6)',
+        borderColor: 'rgb(34, 197, 94)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'CO₂' }
+      }
+    }
+  });
+
+  pmChart = new Chart(document.getElementById("pmChart"), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'PM1.0', data: pm.map(x => x * 0.6), backgroundColor: 'rgba(147, 197, 253, 0.8)' },
+        { label: 'PM2.5', data: pm, backgroundColor: 'rgba(251, 146, 60, 0.8)' },
+        { label: 'PM10', data: pm.map(x => x * 1.8), backgroundColor: 'rgba(156, 163, 175, 0.8)' }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'Partículas (PM)' }
+      }
+    }
+  });
+
+  noiseChart = new Chart(document.getElementById("noiseChart"), {
+    type: 'doughnut',
+    data: {
+      labels: ["Ruido", "Restante"],
+      datasets: [{
+        data: [noise, 100 - noise], 
+        backgroundColor: ["rgb(251, 146, 60)", "rgb(229, 231, 235)"]
+      }]
+    },
+    options: { 
+      rotation: -90, 
+      circumference: 180,
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'Nivel de Ruido' },
+        legend: { display: false }
+      }
+    }
+  });
+
+  lightChart = new Chart(document.getElementById("lightChart"), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ 
+        label: "Iluminación (lux)", 
+        data: light, 
+        borderColor: 'rgb(234, 179, 8)',
+        backgroundColor: 'rgba(234, 179, 8, 0.1)',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'Iluminación' }
+      }
+    }
+  });
+}
+
+function actualizarGraficas(labels, temp, hum, co2, pm, noise, light) {
+
+  if (!tempChart) {
+    crearGraficas(labels, temp, hum, co2, pm, noise, light);
+    return;
+  }
+
+  tempChart.data.labels = labels;
+  humChart.data.labels = labels;
+  co2Chart.data.labels = labels;
+  pmChart.data.labels = labels;
+  lightChart.data.labels = labels;
+
+  tempChart.data.datasets[0].data = temp;
+  humChart.data.datasets[0].data = hum;
+  co2Chart.data.datasets[0].data = co2;
+  lightChart.data.datasets[0].data = light;
+
+  pmChart.data.datasets[0].data = pm.map(x => x * 0.6);
+  pmChart.data.datasets[1].data = pm;
+  pmChart.data.datasets[2].data = pm.map(x => x * 1.8);
+
+  tempChart.update();
+  humChart.update();
+  co2Chart.update();
+  pmChart.update();
+  noiseChart.update();
+  lightChart.update();
+}
+
+cargarDatos();
+setInterval(cargarDatos, 5000);
+</script>
+
+<script>
+(function () {
+    const toggle = document.getElementById("toggleDark");
+    if (!toggle) return; // por si no existe el elemento
+
+    // 1) Al cargar la página: aplica el tema guardado
+    const isDark = localStorage.getItem("modo-oscuro") === "true";
+    if (isDark) {
+        document.body.classList.add("dark-mode");
+        // opcional: cambia el icono si usas iconos (ejemplo con bootstrap icons)
+        if (toggle.classList.contains('bi-moon')) toggle.classList.replace('bi-moon', 'bi-sun');
+    } else {
+        // asegurar icono correcto cuando no está en dark
+        if (toggle.classList.contains('bi-sun')) toggle.classList.replace('bi-sun', 'bi-moon');
+    }
+
+    // 2) Manejador de clic: alterna clase y guarda estado
+    toggle.addEventListener('click', () => {
+        const nowDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('modo-oscuro', nowDark);
+
+        // opcional: cambiar icono entre luna/sol si usas clases bi
+        if (nowDark) {
+            if (toggle.classList.contains('bi-moon')) toggle.classList.replace('bi-moon', 'bi-sun');
+        } else {
+            if (toggle.classList.contains('bi-sun')) toggle.classList.replace('bi-sun', 'bi-moon');
+        }
+    });
+})();
+</script>
+
+
+<script>
+    const btnMenu = document.getElementById("btnMenu");
+    const sidebar = document.querySelector(".sidebar");
+    const mainContent = document.querySelector(".main-content");
+
+    btnMenu.addEventListener("click", () => {
+        sidebar.classList.toggle("closed");
+        mainContent.classList.toggle("closed");
+    });
+</script>
+
+<script>
+const nombre = localStorage.getItem("usuarioNombre") || "";
+const apellido = localStorage.getItem("usuarioApellido") || "";
+
+// Elementos
+const spanUsuario = document.getElementById("nombreUsuario");
+const circulo = document.getElementById("circuloUsuario");
+
+// Mostrar nombre completo
+let nombreCompleto = nombre;
+if (apellido) nombreCompleto += " " + apellido;
+spanUsuario.textContent = nombreCompleto || "Usuario";
+
+// Función para obtener dos iniciales siempre
+function obtenerIniciales(nombre, apellido) {
+    let iniciales = "";
+
+    if (nombre && apellido) {
+        // Caso normal: nombre + apellido
+        iniciales = nombre.charAt(0) + apellido.charAt(0);
+    } else if (nombre) {
+        // Solo nombre
+        iniciales = nombre.substring(0, 2);
+    } else if (apellido) {
+        // Solo apellido
+        iniciales = apellido.substring(0, 2);
+    } else {
+        // Ninguno
+        iniciales = "US";
+    }
+
+    return iniciales.toUpperCase();
+}
+
+// Mostrar iniciales en el círculo
+circulo.textContent = obtenerIniciales(nombre, apellido);
+</script>
+
+
+
+</body>
+</html>
