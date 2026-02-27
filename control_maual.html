@@ -1,3 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Manual - AURA</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{background:#f5f5f5;transition:.3s;font-family:Poppins,sans-serif}
+body.dark{background:#111!important;color:#eee}
+.topbar{width:100%;height:70px;background:white;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 30px;position:fixed;top:0;left:0;z-index:10;transition:.3s}
+body.dark .topbar{background:#1a1a1a!important;border-color:#333!important}
+.logo-aura{font-size:30px;font-weight:700;background:linear-gradient(90deg,#FFDE59,#FF914D);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.icon-darkmode{font-size:28px;cursor:pointer;color:#777!important}
+body.dark .icon-darkmode{color:#ddd!important}
+.sidebar{width:260px;background:white;position:fixed;top:70px;left:0;bottom:0;border-right:1px solid #ddd;padding-top:35px}
+body.dark .sidebar{background:#1a1a1a;border-color:#333}
+.sidebar a{color:#808080;font-size:18px;padding:15px 25px;display:flex;align-items:center;gap:12px;text-decoration:none;border-radius:10px;margin:5px 15px}
+.sidebar a:hover{background:#FFF3D2;color:#C9962D}
+.sidebar a.active{background:#FFF3D2;font-weight:600;color:#C9962D}
+.main-content{margin-left:260px;padding:110px 40px}
+.card-device{padding:20px;border-radius:18px;background:white;border:none;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+body.dark .card-device{background:#1f1f1f;color:#eee;border:1px solid #333;box-shadow:none}
+.card-device.disabled{opacity:.5;pointer-events:none}
+.connection-status{display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc3545;margin-right:8px;animation:pulse 2s infinite}
+.connection-status.connected{background:#28a745}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+</style>
+</head>
+
+<body>
+
+<div class="topbar d-flex justify-content-between">
+<div class="d-flex align-items-center gap-3">
+<i id="btnMenu" class="bi bi-list fs-2"></i>
+<i class="bi bi-house-fill fs-3"></i>
+<span class="logo-aura">AURA</span>
+</div>
+<div class="d-flex align-items-center gap-4">
+<i id="toggleDark" class="bi bi-moon icon-darkmode"></i>
+<div class="d-flex align-items-center gap-2">
+<div style="background:#6C7A89;color:white;border-radius:50%;width:46px;height:46px;display:flex;justify-content:center;align-items:center">US</div>
+<span>Usuario</span>
+</div>
+<i class="bi bi-power text-danger fs-3"></i>
+</div>
+</div>
+
+<div class="sidebar">
+<a href="dashboard.html"><i class="bi bi-bar-chart-fill"></i> Dashboard</a>
+<a class="active" href="#"><i class="bi bi-search"></i> Control Manual</a>
+<a href="#"><i class="bi bi-grid-3x3-gap-fill"></i> Espacios</a>
+<a href="#"><i class="bi bi-clock-history"></i> Historial</a>
+</div>
+
+<div class="main-content">
+<h2>Control Manual</h2>
+
+<div class="card-device mb-3">
+<h5><span id="connectionStatus" class="connection-status"></span> Estado del Sistema</h5>
+<small id="connectionText">Verificando conexión...</small>
+</div>
+
+<div class="row g-3">
+<div class="col-md-6">
+<div class="card-device" id="cardFoco">
+<h5>💡 Foco</h5>
+<span id="estadoFoco">Apagado</span>
+<input type="checkbox" id="switchFoco"><br>
+<input type="range" id="rangoFoco" max="100" value="0">
+<span id="valorFoco">0%</span>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card-device" id="cardVentilador">
+<h5>🌀 Ventilador</h5>
+<span id="estadoVentilador">Apagado</span>
+<input type="checkbox" id="switchVentilador">
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// ===== CONFIG API =====
+const API_URL="https://api-aura-204e.onrender.com/api";
+const DEVICE_ID="ESP32_AURA_01";
+
+const ENDPOINTS={
+status:"/status",
+ventiladorOn:"/ventilador/on",
+ventiladorOff:"/ventilador/off",
+focoOn:"/foco/on",
+focoOff:"/foco/off",
+focoIntensidad:"/foco/intensidad"
+};
+
+async function verificarConexion(){
+const s=document.getElementById("connectionStatus");
+const t=document.getElementById("connectionText");
+try{
+const r=await fetch(`${API_URL}${ENDPOINTS.status}?dispositivo_id=${DEVICE_ID}`);
+const d=await r.json();
+s.classList.add("connected");
+t.textContent="Conectado";
+}catch(e){
+s.classList.remove("connected");
+t.textContent="Sin conexión";
+}
+}
+
+document.getElementById("switchVentilador").addEventListener("change",async function(){
+const ep=this.checked?ENDPOINTS.ventiladorOn:ENDPOINTS.ventiladorOff;
+await fetch(`${API_URL}${ep}?dispositivo_id=${DEVICE_ID}`,{method:"POST"});
+document.getElementById("estadoVentilador").textContent=this.checked?"Encendido":"Apagado";
+});
+
+document.getElementById("switchFoco").addEventListener("change",async function(){
+const ep=this.checked?ENDPOINTS.focoOn:ENDPOINTS.focoOff;
+await fetch(`${API_URL}${ep}?dispositivo_id=${DEVICE_ID}`,{method:"POST"});
+document.getElementById("estadoFoco").textContent=this.checked?"Encendido":"Apagado";
+});
+
+document.getElementById("rangoFoco").addEventListener("input",function(){
+document.getElementById("valorFoco").textContent=this.value+"%";
+});
+
+document.getElementById("rangoFoco").addEventListener("change",async function(){
+await fetch(`${API_URL}${ENDPOINTS.focoIntensidad}?intensidad=${this.value}&dispositivo_id=${DEVICE_ID}`,{method:"POST"});
+});
+
+window.onload=()=>verificarConexion();
+</script>
+
+</body>
+</html>
+
 <script>
 // ===== CONFIGURACIÓN API =====
 const API_URL = "https://api-aura-204e.onrender.com/api";
@@ -225,3 +365,4 @@ window.addEventListener('load', () => {
     setInterval(verificarConexion, 10000);
 });
 </script>
+
