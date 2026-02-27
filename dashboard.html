@@ -394,7 +394,7 @@ let tempChart, humChart, co2Chart, pmChart, noiseChart, lightChart;
 
 async function cargarDatos() {
   try {
-    const res = await fetch("http://auraa.ddns.net:8000/getmediciones");
+    const res = await fetch("https://mi-api-fastapi-hnau.onrender.com/getmediciones");
     const datos = await res.json();
 
     if (!Array.isArray(datos) || datos.length === 0) return;
